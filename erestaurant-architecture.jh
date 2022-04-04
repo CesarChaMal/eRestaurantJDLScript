@@ -1,0 +1,77 @@
+application {
+  config {
+    baseName eRestaurantGateway
+    applicationType gateway
+    packageName com.erestaurant.gateway
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType postgresql
+    cacheProvider ehcache
+    clientFramework angular
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    serverPort 8080
+  }
+  entities *
+}
+
+application {
+  config {
+    baseName eRestaurantRegistry
+    applicationType microservice
+    packageName com.erestaurant.registry
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType postgresql
+    cacheProvider hazelcast
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    serverPort 8081
+  }
+}
+
+application {
+  config {
+    baseName eRestaurantUsers
+    applicationType microservice
+    packageName com.erestaurant.users
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType postgresql
+    cacheProvider hazelcast
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    serverPort 8082
+  }
+  entities *
+}
+ 
+entity RestaurantUser {
+  id String required minlength(5)
+}
+
+relationship OneToOne {
+  RestaurantUser{internalUser(login)} to User
+}
+
+// Set pagination options
+// paginate User with infinite-scroll
+paginate RestaurantUser with pagination
+
+// Use Data Transfer Objects (DTO)
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+// service all with serviceImpl except SoftRestaurantUser
+
+microservice RestaurantUser with usersms
