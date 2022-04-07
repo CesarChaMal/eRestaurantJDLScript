@@ -15,7 +15,7 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8080
   }
-  entities *
+  entities RestaurantUser
 }
 
 application {
@@ -52,11 +52,15 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8082
   }
-  entities *
+  entities RestaurantUser
 }
  
 entity RestaurantUser {
   id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  email String 
 }
 
 relationship OneToOne {
@@ -74,4 +78,4 @@ dto * with mapstruct
 service all with serviceImpl
 // service all with serviceImpl except SoftRestaurantUser
 
-microservice RestaurantUser with usersms
+microservice RestaurantUser with eRestaurantUsers
