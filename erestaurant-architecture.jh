@@ -15,7 +15,7 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8080
   }
-  entities RestaurantUser
+  entities *
 }
 
 application {
@@ -38,9 +38,9 @@ application {
 
 application {
   config {
-    baseName eRestaurantUsers
+    baseName eRestaurantAdmin
     applicationType microservice
-    packageName com.erestaurant.users
+    packageName com.erestaurant.admin
     serviceDiscoveryType eureka
     authenticationType oauth2
     prodDatabaseType postgresql
@@ -52,10 +52,48 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8082
   }
-  entities RestaurantUser
+  entities User, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount
 }
- 
-entity RestaurantUser {
+
+application {
+  config {
+    baseName eRestaurantRestaurant
+    applicationType microservice
+    packageName com.erestaurant.restautant
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType postgresql
+    cacheProvider hazelcast
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    serverPort 8083
+  }
+  entities User, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd
+}
+
+application {
+  config {
+    baseName eRestaurantCustomer
+    applicationType microservice
+    packageName com.erestaurant.customer
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType postgresql
+    cacheProvider hazelcast
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    serverPort 8084
+  }
+  entities User, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
+}
+
+entity User {
   id String required minlength(5)
   name String required minlength(3)
   description TextBlob
@@ -63,19 +101,210 @@ entity RestaurantUser {
   email String 
 }
 
+entity Admin {
+  id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  email String 
+}
+
+entity Restaurant {
+  id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  email String 
+  rating Float required
+}
+
+entity Customer {
+  id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  email String 
+  age Integer
+}
+
+entity CustomerProfile {
+  id String required minlength(5)
+  name String required minlength(3)
+  location String required minlength(3)
+  locationRange String required minlength(3)
+  referals TextBlob
+}
+
+entity Products {
+  id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  estimatedPreparaingTime Float required
+}
+
+entity Discount {
+  id String required minlength(5)
+  code String required minlength(3)
+  description TextBlob
+  percentage Float required
+}
+
+entity AppDiscount {
+  id String required minlength(5)
+  code String required minlength(3)
+  description TextBlob
+  percentage Float required
+}
+
+entity RestaurantDiscount {
+  id String required minlength(5)
+  code String required minlength(3)
+  description TextBlob
+  percentage Float required
+}
+
+entity Categories {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Cart {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Order {
+  id String required minlength(5)
+  description TextBlob
+  rating Float required
+}
+
+entity OrderType {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Payment {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Ad {
+  id String required minlength(5)
+  url String required minlength(5)
+  description TextBlob
+}
+
+entity RestaurantAd {
+  id String required minlength(5)
+  url String required minlength(5)
+  description TextBlob
+}
+
+entity AppAd {
+  id String required minlength(5)
+  url String required minlength(5)
+  description TextBlob
+}
+
+entity Notification {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity NotificationType {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Employee {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Profile {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Role {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Permission {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity SimplePermission {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity CompositePermission {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity State {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity NewOrder {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity Cancel {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity Complete {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity Refunded {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity OnHold {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity Close {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
 relationship OneToOne {
-  RestaurantUser{internalUser(login)} to User
+  User{internalUser(id)} to User
 }
 
 // Set pagination options
 // paginate User with infinite-scroll
-paginate RestaurantUser with pagination
+paginate User with pagination
 
 // Use Data Transfer Objects (DTO)
 dto * with mapstruct
 
 // Set service options to all except few
 service all with serviceImpl
-// service all with serviceImpl except SoftRestaurantUser
+// service all with serviceImpl except SoftRestaurantAdmin
 
-microservice RestaurantUser with eRestaurantUsers
+microservice User, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount with eRestaurantAdmin
+microservice User, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd with eRestaurantRestaurant
+microservice User, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
+
