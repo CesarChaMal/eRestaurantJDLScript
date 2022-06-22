@@ -52,7 +52,7 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8082
   }
-  entities User, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount
+  entities AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount
 }
 
 application {
@@ -71,7 +71,7 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8083
   }
-  entities User, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd
+  entities AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd
 }
 
 application {
@@ -90,10 +90,10 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8084
   }
-  entities User, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
+  entities AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
 }
 
-entity User {
+entity AppUser {
   id String required minlength(5)
   name String required minlength(3)
   description TextBlob
@@ -290,21 +290,21 @@ entity Close {
 }
 
 relationship OneToOne {
-  User{internalUser(id)} to User
+  AppUser{internalUser(login)} to User
 }
 
 // Set pagination options
 // paginate User with infinite-scroll
-paginate User with pagination
+paginate AppUser with pagination
 
 // Use Data Transfer Objects (DTO)
 dto * with mapstruct
 
 // Set service options to all except few
 service all with serviceImpl
-// service all with serviceImpl except SoftRestaurantAdmin
+// service all with serviceImpl except eRestaurantAdmin
 
-microservice User, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount with eRestaurantAdmin
-microservice User, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd with eRestaurantRestaurant
-microservice User, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
+microservice AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount with eRestaurantAdmin
+microservice AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd with eRestaurantRestaurant
+microservice AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
 
