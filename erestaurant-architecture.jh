@@ -52,7 +52,8 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8082
   }
-  entities AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount
+  // entities AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount
+  entities *
 }
 
 application {
@@ -71,7 +72,8 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8083
   }
-  entities AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd
+  // entities AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd
+  entities *
 }
 
 application {
@@ -90,7 +92,8 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     serverPort 8084
   }
-  entities AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
+  // entities AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
+  entities *
 }
 
 entity AppUser {
@@ -293,9 +296,33 @@ relationship OneToOne {
   AppUser{internalUser(login)} to User
 }
 
+relationship OneToMany {
+  Restaurant{products} to Products
+  Restaurant{ads} to RestaurantAd
+  Restaurant{employees} to Employee
+  Restaurant{notifications} to Notification
+  Products{discounts} to RestaurantDiscount
+  Cart{discounts} to AppDiscount
+  Cart{products} to Products
+  Cart{payments} to Payment
+}
+
+/* 
+relationship ManyToOne {
+  Restaurant{products} to Products
+}
+*/
+ 
+
+ /* 
+relationship ManyToMany {
+  AppUser{internalUser(login)} to User
+}
+*/
+
 // Set pagination options
-// paginate User with infinite-scroll
-paginate AppUser with pagination
+paginate AppUser with infinite-scroll
+paginate Restaurant, Customer, Products with pagination
 
 // Use Data Transfer Objects (DTO)
 dto * with mapstruct
@@ -304,7 +331,7 @@ dto * with mapstruct
 service all with serviceImpl
 // service all with serviceImpl except eRestaurantAdmin
 
-microservice AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount with eRestaurantAdmin
-microservice AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd with eRestaurantRestaurant
-microservice AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
+// microservice AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount with eRestaurantAdmin
+// microservice AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd with eRestaurantRestaurant
+// microservice AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
 
