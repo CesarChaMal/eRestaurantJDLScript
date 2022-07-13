@@ -327,8 +327,8 @@ relationship OneToMany {
 }
 
 relationship ManyToMany {
-  AppUser{roles} to Role{users}
-  Role{permissions} to Permission{roles}
+  AppUser{roles} to Role
+  Role{permissions} to Permission
 }
 
 /* 

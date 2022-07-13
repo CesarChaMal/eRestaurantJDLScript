@@ -13,7 +13,7 @@ application {
     searchEngine elasticsearch
     nativeLanguage en
     languages [en, pl, fr, es, de, it, ro]
-    websocket true
+    // websocket spring-websocket
     enableHibernateCache true
     serverPort 8080
   }
@@ -241,8 +241,8 @@ relationship OneToMany {
 }
 
 relationship ManyToMany {
-  AppUser{roles} to Role
-  Role{permissions} to Permission
+  AppUser{roles} to Role{users}
+  Role{permissions} to Permission{roles}
 }
 
 /* 
@@ -261,8 +261,3 @@ dto * with mapstruct
 // Set service options to all except few
 service all with serviceImpl
 // service all with serviceImpl except eRestaurantAdmin
-
-// microservice AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount with eRestaurantAdmin
-// microservice AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd with eRestaurantRestaurant
-// microservice AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
-
