@@ -1,0 +1,354 @@
+application {
+  config {
+    baseName eRestaurantGateway
+    applicationType gateway
+    packageName com.erestaurant.gateway
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType mysql
+    cacheProvider ehcache
+    clientFramework angular
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    websocket true
+    enableHibernateCache true
+    serverPort 8080
+  }
+  entities *
+}
+
+application {
+  config {
+    baseName eRestaurantRegistry
+    applicationType microservice
+    packageName com.erestaurant.registry
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType mysql
+    cacheProvider hazelcast
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    websocket true
+    enableHibernateCache true
+    serverPort 8081
+  }
+}
+
+application {
+  config {
+    baseName eRestaurantAdmin
+    applicationType microservice
+    packageName com.erestaurant.admin
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType mysql
+    cacheProvider hazelcast
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    websocket true
+    enableHibernateCache true
+    serverPort 8082
+  }
+  // entities AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount
+  entities *
+}
+
+application {
+  config {
+    baseName eRestaurantRestaurant
+    applicationType microservice
+    packageName com.erestaurant.restautant
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType mysql
+    cacheProvider hazelcast
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    websocket true
+    enableHibernateCache true
+    serverPort 8083
+  }
+  // entities AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd
+  entities *
+}
+
+application {
+  config {
+    baseName eRestaurantCustomer
+    applicationType microservice
+    packageName com.erestaurant.customer
+    serviceDiscoveryType eureka
+    authenticationType oauth2
+    prodDatabaseType mysql
+    cacheProvider hazelcast
+    reactive true
+    messageBroker kafka
+    searchEngine elasticsearch
+    nativeLanguage en
+    languages [en, pl, fr, es, de, it, ro]
+    websocket true
+    enableHibernateCache true
+    serverPort 8084
+  }
+  // entities AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
+  entities *
+}
+
+entity AppUser {
+  id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  email String 
+}
+
+entity Admin {
+  id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  email String 
+}
+
+entity Restaurant {
+  id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  email String 
+  rating Float required
+}
+
+entity Customer {
+  id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  email String 
+  age Integer
+}
+
+entity CustomerProfile {
+  id String required minlength(5)
+  name String required minlength(3)
+  location String required minlength(3)
+  locationRange String required minlength(3)
+  referals TextBlob
+}
+
+entity Products {
+  id String required minlength(5)
+  name String required minlength(3)
+  description TextBlob
+  image ImageBlob
+  estimatedPreparaingTime Float required
+}
+
+entity Discount {
+  id String required minlength(5)
+  code String required minlength(3)
+  description TextBlob
+  percentage Float required
+}
+
+entity AppDiscount {
+  id String required minlength(5)
+  code String required minlength(3)
+  description TextBlob
+  percentage Float required
+}
+
+entity RestaurantDiscount {
+  id String required minlength(5)
+  code String required minlength(3)
+  description TextBlob
+  percentage Float required
+}
+
+entity Categories {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Cart {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Order {
+  id String required minlength(5)
+  description TextBlob
+  rating Float required
+}
+
+entity OrderType {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Payment {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Ad {
+  id String required minlength(5)
+  url String required minlength(5)
+  description TextBlob
+}
+
+entity RestaurantAd {
+  id String required minlength(5)
+  url String required minlength(5)
+  description TextBlob
+}
+
+entity AppAd {
+  id String required minlength(5)
+  url String required minlength(5)
+  description TextBlob
+}
+
+entity Notification {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity NotificationType {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Employee {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Profile {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Role {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity Permission {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity SimplePermission {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity PermissionComposite {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity State {
+  id String required minlength(5)
+  description TextBlob
+}
+
+entity NewOrder {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity Cancel {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity Complete {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity Refunded {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity OnHold {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+entity Close {
+  id String required minlength(5)
+  description TextBlob
+  enabled Boolean
+}
+
+relationship OneToOne {
+  AppUser{internalUser(login)} to User
+  Notification{type} to NotificationType
+  Products{category} to Categories
+  Customer{profile} to CustomerProfile	
+  Cart{Order} to Order
+  Order{type} to OrderType
+  Order{state} to State
+  PermissionComposite{permission} to Permission
+}  
+
+relationship OneToMany {
+  Restaurant{products} to Products
+  Restaurant{ads} to RestaurantAd
+  Restaurant{employees} to Employee
+  Restaurant{notifications} to Notification
+  Products{discounts} to RestaurantDiscount
+  Cart{products} to Products
+  Cart{discounts} to AppDiscount
+  Cart{payments} to Payment
+  Admin{ads} to AppAd
+  Customer{orders} to Order
+}
+
+relationship ManyToMany {
+  AppUser{roles} to Role
+  Role{permissions} to Permission
+}
+
+/* 
+relationship ManyToOne {
+  Restaurant{products} to Products
+}
+*/
+
+// Set pagination options
+paginate AppUser with infinite-scroll
+paginate Restaurant, Customer, Products with pagination
+
+// Use Data Transfer Objects (DTO)
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+// service all with serviceImpl except eRestaurantAdmin
+
+// microservice AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount with eRestaurantAdmin
+// microservice AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd with eRestaurantRestaurant
+// microservice AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
+

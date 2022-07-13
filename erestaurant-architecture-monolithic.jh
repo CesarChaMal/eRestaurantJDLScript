@@ -1,11 +1,11 @@
 application {
   config {
-    baseName eRestaurantGateway
-    applicationType gateway
-    packageName com.erestaurant.gateway
+    baseName eRestaurantApp
+    applicationType monolith
+    packageName com.erestaurant.erestaurantapp
     serviceDiscoveryType eureka
     authenticationType oauth2
-    prodDatabaseType postgresql
+    prodDatabaseType mysql
     cacheProvider ehcache
     clientFramework angular
     reactive true
@@ -13,86 +13,10 @@ application {
     searchEngine elasticsearch
     nativeLanguage en
     languages [en, pl, fr, es, de, it, ro]
+    websocket true
+    enableHibernateCache true
     serverPort 8080
   }
-  entities *
-}
-
-application {
-  config {
-    baseName eRestaurantRegistry
-    applicationType microservice
-    packageName com.erestaurant.registry
-    serviceDiscoveryType eureka
-    authenticationType oauth2
-    prodDatabaseType postgresql
-    cacheProvider hazelcast
-    reactive true
-    messageBroker kafka
-    searchEngine elasticsearch
-    nativeLanguage en
-    languages [en, pl, fr, es, de, it, ro]
-    serverPort 8081
-  }
-}
-
-application {
-  config {
-    baseName eRestaurantAdmin
-    applicationType microservice
-    packageName com.erestaurant.admin
-    serviceDiscoveryType eureka
-    authenticationType oauth2
-    prodDatabaseType postgresql
-    cacheProvider hazelcast
-    reactive true
-    messageBroker kafka
-    searchEngine elasticsearch
-    nativeLanguage en
-    languages [en, pl, fr, es, de, it, ro]
-    serverPort 8082
-  }
-  // entities AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount
-  entities *
-}
-
-application {
-  config {
-    baseName eRestaurantRestaurant
-    applicationType microservice
-    packageName com.erestaurant.restautant
-    serviceDiscoveryType eureka
-    authenticationType oauth2
-    prodDatabaseType postgresql
-    cacheProvider hazelcast
-    reactive true
-    messageBroker kafka
-    searchEngine elasticsearch
-    nativeLanguage en
-    languages [en, pl, fr, es, de, it, ro]
-    serverPort 8083
-  }
-  // entities AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd
-  entities *
-}
-
-application {
-  config {
-    baseName eRestaurantCustomer
-    applicationType microservice
-    packageName com.erestaurant.customer
-    serviceDiscoveryType eureka
-    authenticationType oauth2
-    prodDatabaseType postgresql
-    cacheProvider hazelcast
-    reactive true
-    messageBroker kafka
-    searchEngine elasticsearch
-    nativeLanguage en
-    languages [en, pl, fr, es, de, it, ro]
-    serverPort 8084
-  }
-  // entities AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
   entities *
 }
 
@@ -246,7 +170,7 @@ entity SimplePermission {
   description TextBlob
 }
 
-entity CompositePermission {
+entity PermissionComposite {
   id String required minlength(5)
   description TextBlob
 }
@@ -294,7 +218,14 @@ entity Close {
 
 relationship OneToOne {
   AppUser{internalUser(login)} to User
-}
+  Notification{type} to NotificationType
+  Products{category} to Categories
+  Customer{profile} to CustomerProfile	
+  Cart{Order} to Order
+  Order{type} to OrderType
+  Order{state} to State
+  PermissionComposite{permission} to Permission
+}  
 
 relationship OneToMany {
   Restaurant{products} to Products
@@ -302,21 +233,21 @@ relationship OneToMany {
   Restaurant{employees} to Employee
   Restaurant{notifications} to Notification
   Products{discounts} to RestaurantDiscount
-  Cart{discounts} to AppDiscount
   Cart{products} to Products
+  Cart{discounts} to AppDiscount
   Cart{payments} to Payment
+  Admin{ads} to AppAd
+  Customer{orders} to Order
+}
+
+relationship ManyToMany {
+  AppUser{roles} to Role
+  Role{permissions} to Permission
 }
 
 /* 
 relationship ManyToOne {
   Restaurant{products} to Products
-}
-*/
- 
-
- /* 
-relationship ManyToMany {
-  AppUser{internalUser(login)} to User
 }
 */
 
