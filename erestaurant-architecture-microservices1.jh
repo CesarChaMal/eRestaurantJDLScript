@@ -15,7 +15,7 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     // websocket spring-websocket
     enableHibernateCache true
-    serverPort 8080
+    serverPort 9090
   }
   entities *
 }
@@ -36,7 +36,7 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     // websocket spring-websocket
     enableHibernateCache true
-    serverPort 8081
+    serverPort 9091
   }
 }
 
@@ -56,10 +56,9 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     // websocket spring-websocket
     enableHibernateCache true
-    serverPort 8082
+    serverPort 9092
   }
-  // entities AppUser, Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount
-  entities *
+  entities AppUser, Admin, Role, AppAd, Permission, SimplePermission, PermissionComposite, AppDiscount
 }
 
 application {
@@ -78,10 +77,9 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     // websocket spring-websocket
     enableHibernateCache true
-    serverPort 8083
+    serverPort 9093
   }
-  // entities AppUser, Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd
-  entities *
+  entities Restaurant, Categories, RestaurantDiscount, Notification, NotificationType, Employee, RestaurantAd
 }
 
 application {
@@ -100,10 +98,9 @@ application {
     languages [en, pl, fr, es, de, it, ro]
     // websocket spring-websocket
     enableHibernateCache true
-    serverPort 8084
+    serverPort 9094
   }
-  // entities AppUser, Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
-  entities *
+  entities Customer, CustomerProfile, Order, OrderType, Cart, Products, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
 }
 
 entity AppUser {
@@ -305,7 +302,7 @@ entity Close {
 relationship OneToOne {
   AppUser{internalUser(login)} to User
   Notification{type} to NotificationType
-  Products{category} to Categories
+  // Products{category} to Categories
   Customer{profile} to CustomerProfile	
   Cart{Order} to Order
   Order{type} to OrderType
@@ -314,21 +311,21 @@ relationship OneToOne {
 }  
 
 relationship OneToMany {
-  Restaurant{products} to Products
+  // Restaurant{products} to Products
   Restaurant{ads} to RestaurantAd
   Restaurant{employees} to Employee
   Restaurant{notifications} to Notification
-  Products{discounts} to RestaurantDiscount
+  // Products{discounts} to RestaurantDiscount
   Cart{products} to Products
-  Cart{discounts} to AppDiscount
+  // Cart{discounts} to AppDiscount
   Cart{payments} to Payment
   Admin{ads} to AppAd
   Customer{orders} to Order
 }
 
 relationship ManyToMany {
-  AppUser{roles} to Role
-  Role{permissions} to Permission
+  AppUser{roles} to Role{users}
+  Role{permissions} to Permission{roles}
 }
 
 /* 
@@ -348,7 +345,11 @@ dto * with mapstruct
 service all with serviceImpl
 // service all with serviceImpl except eRestaurantAdmin
 
-microservice Admin, Role, Permission, SimplePermission, CompositePermission, Discount, AppDiscount, Ad, AppDiscount with eRestaurantAdmin
-microservice Restaurant, Products, Categories, Discount, RestaurantDiscount, Notification, NotificationType, Employee, Ad, RestaurantAd with eRestaurantRestaurant
-microservice Customer, CustomerProfile, Order, Products, Cart, Products, Categories, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
+// microservice AppUser, Admin, Role, AppAd, Permission, SimplePermission, PermissionComposite, AppDiscount, Cart with eRestaurantAdmin
+microservice AppUser, Admin, Role, AppAd, Permission, SimplePermission, PermissionComposite, AppDiscount with eRestaurantAdmin
 
+// microservice Restaurant, Products, Categories, RestaurantDiscount, Notification, NotificationType, Employee, RestaurantAd with eRestaurantRestaurant
+microservice Restaurant, Categories, RestaurantDiscount, Notification, NotificationType, Employee, RestaurantAd with eRestaurantRestaurant
+
+microservice Customer, CustomerProfile, Order, OrderType, Cart, Products, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
+// microservice Customer, CustomerProfile, Order, OrderType, Cart, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer

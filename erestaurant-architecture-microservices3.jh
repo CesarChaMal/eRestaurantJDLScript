@@ -58,7 +58,7 @@ application {
     enableHibernateCache true
     serverPort 9092
   }
-  entities *
+  entities AppUser, Admin, Role, AppAd, Permission, SimplePermission, PermissionComposite, AppDiscount, Cart, Products
 }
 
 application {
@@ -79,7 +79,7 @@ application {
     enableHibernateCache true
     serverPort 9093
   }
-  entities *
+  entities Restaurant, Products, Categories, RestaurantDiscount, Notification, NotificationType, Employee, RestaurantAd
 }
 
 application {
@@ -100,7 +100,7 @@ application {
     enableHibernateCache true
     serverPort 9094
   }
-  entities *
+  entities Customer, CustomerProfile, Order, OrderType, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close
 }
 
 entity AppUser {
@@ -302,9 +302,9 @@ entity Close {
 relationship OneToOne {
   AppUser{internalUser(login)} to User
   Notification{type} to NotificationType
-  Products{category} to Categories
+  // Products{category} to Categories
   Customer{profile} to CustomerProfile	
-  Cart{Order} to Order
+  // Cart{Order} to Order
   Order{type} to OrderType
   Order{state} to State
   PermissionComposite{permission} to Permission
@@ -315,10 +315,10 @@ relationship OneToMany {
   Restaurant{ads} to RestaurantAd
   Restaurant{employees} to Employee
   Restaurant{notifications} to Notification
-  Products{discounts} to RestaurantDiscount
+  // Products{discounts} to RestaurantDiscount
   Cart{products} to Products
   Cart{discounts} to AppDiscount
-  Cart{payments} to Payment
+  // Cart{payments} to Payment
   Admin{ads} to AppAd
   Customer{orders} to Order
 }
@@ -344,3 +344,14 @@ dto * with mapstruct
 // Set service options to all except few
 service all with serviceImpl
 // service all with serviceImpl except eRestaurantAdmin
+
+microservice AppUser, Admin, Role, AppAd, Permission, SimplePermission, PermissionComposite, AppDiscount, Cart, Products with eRestaurantAdmin
+// microservice AppUser, Admin, Role, AppAd, Permission, SimplePermission, PermissionComposite, AppDiscount, Cart with eRestaurantAdmin
+// microservice AppUser, Admin, Role, AppAd, Permission, SimplePermission, PermissionComposite, AppDiscount with eRestaurantAdmin
+
+// microservice Restaurant, Products, Categories, RestaurantDiscount, Notification, NotificationType, Employee, RestaurantAd with eRestaurantRestaurant
+microservice Restaurant, Categories, RestaurantDiscount, Notification, NotificationType, Employee, RestaurantAd with eRestaurantRestaurant
+
+// microservice Customer, CustomerProfile, Order, OrderType, Cart, Products, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
+// microservice Customer, CustomerProfile, Order, OrderType, Cart, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
+microservice Customer, CustomerProfile, Order, OrderType, Payment, State, NewOrder, Cancel, Complete, Refunded, OnHold, Close with eRestaurantCustomer
