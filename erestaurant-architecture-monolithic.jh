@@ -3,7 +3,7 @@ application {
     baseName eRestaurantApp
     applicationType monolith
     packageName com.erestaurant.erestaurantapp
-    serviceDiscoveryType eureka
+    serviceDiscoveryType no
     authenticationType oauth2
     prodDatabaseType mysql
     cacheProvider ehcache
@@ -11,6 +11,7 @@ application {
     reactive true
     messageBroker kafka
     searchEngine elasticsearch
+    // searchEngine false
     nativeLanguage en
     languages [en, pl, fr, es, de, it, ro]
     // websocket spring-websocket
